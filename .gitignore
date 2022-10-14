@@ -3,6 +3,5 @@
 ./NCC_puncta_model_output_data_eFAST/
 ./NCC_puncta_model_output_data_experiments/
 ./NCC_consistency_analysis/
-*.txt
 *.csv
 *.asv
