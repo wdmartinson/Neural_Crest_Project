@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+###############################################################################
+# If you use PhysiCell in your project, please cite PhysiCell and the version #
+# number, such as below:                                                      #
+#                                                                             #
+# We implemented and solved the model using PhysiCell (Version x.y.z) [1].    #
+#                                                                             #
+# [1] A Ghaffarizadeh, R Heiland, SH Friedman, SM Mumenthaler, and P Macklin, #
+#     PhysiCell: an Open Source Physics-Based Cell Simulator for Multicellu-  #
+#     lar Systems, PLoS Comput. Biol. 14(2): e1005991, 2018                   #
+#     DOI: 10.1371/journal.pcbi.1005991                                       #
+#                                                                             #
+# See VERSION.txt or call get_PhysiCell_version() to get the current version  #
+#     x.y.z. Call display_citations() to get detailed information on all cite-#
+#     able software used in your PhysiCell application.                       #
+#                                                                             #
+# Because PhysiCell extensively uses BioFVM, we suggest you also cite BioFVM  #
+#     as below:                                                               #
+#                                                                             #
+# We implemented and solved the model using PhysiCell (Version x.y.z) [1],    #
+# with BioFVM [2] to solve the transport equations.                           #
+#                                                                             #
+# [1] A Ghaffarizadeh, R Heiland, SH Friedman, SM Mumenthaler, and P Macklin, #
+#     PhysiCell: an Open Source Physics-Based Cell Simulator for Multicellu-  #
+#     lar Systems, PLoS Comput. Biol. 14(2): e1005991, 2018                   #
+#     DOI: 10.1371/journal.pcbi.1005991                                       #
+#                                                                             #
+# [2] A Ghaffarizadeh, SH Friedman, and P Macklin, BioFVM: an efficient para- #
+#     llelized diffusive transport solver for 3-D biological simulations,     #
+#     Bioinformatics 32(8): 1256-8, 2016. DOI: 10.1093/bioinformatics/btv730  #
+#                                                                             #
+###############################################################################
+#                                                                             #
+# BSD 3-Clause License (see https://opensource.org/licenses/BSD-3-Clause)     #
+#                                                                             #
+# Copyright (c) 2015-2018, Paul Macklin and the PhysiCell Project             #
+# All rights reserved.                                                        #
+#                                                                             #
+# Redistribution and use in source and binary forms, with or without          #
+# modification, are permitted provided that the following conditions are met: #
+#                                                                             #
+# 1. Redistributions of source code must retain the above copyright notice,   #
+# this list of conditions and the following disclaimer.                       #
+#                                                                             #
+# 2. Redistributions in binary form must reproduce the above copyright        #
+# notice, this list of conditions and the following disclaimer in the         #
+# documentation and/or other materials provided with the distribution.        #
+#                                                                             #
+# 3. Neither the name of the copyright holder nor the names of its            #
+# contributors may be used to endorse or promote products derived from this   #
+# software without specific prior written permission.                         #
+#                                                                             #
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" #
+# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   #
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  #
+# ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE   #
+# LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR         #
+# CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF        #
+# SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    #
+# INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN     #
+# CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)     #
+# ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  #
+# POSSIBILITY OF SUCH DAMAGE.                                                 #
+#                                                                             #
+###############################################################################
+*/
+-->
+
+<!--
+<user_details />
+-->
+
+<PhysiCell_settings version="devel-version">
+	<domain>
+		<x_min>0</x_min>
+		<x_max>500</x_max>
+		<y_min>-250</y_min>
+		<y_max>250</y_max>
+		<z_min>-10</z_min>
+		<z_max>10</z_max>
+		<dx>2.5</dx>
+		<dy>2.5</dy>
+		<dz>20</dz>
+		<use_2D>true</use_2D>
+	</domain>
+
+	<overall>
+		<!-- 18 hr * 60 min/hr -->
+		<!-- <max_time units="min">1080</max_time>  -->
+		<!-- 12 hr * 60 min/hr -->
+		<max_time units="min">720</max_time>
+		<time_units>min</time_units>
+		<space_units>micron</space_units>
+
+		<dt_diffusion units="min">0.01</dt_diffusion>
+		<dt_mechanics units="min">0.1</dt_mechanics>
+		<dt_phenotype units="min">6</dt_phenotype>
+	</overall>
+
+	<parallel>
+		<omp_num_threads>4</omp_num_threads>
+	</parallel>
+
+	<save>
+		<folder>output</folder> <!-- use . for root -->
+
+		<full_data>
+			<interval units="min">5</interval>
+			<enable>true</enable>
+		</full_data>
+
+		<SVG>
+			<interval units="min">60</interval>
+			<enable>false</enable>
+		</SVG>
+
+		<legacy_data>
+			<enable>false</enable>
+		</legacy_data>
+	</save>
+
+	<options>
+		<legacy_random_points_on_sphere_in_divide>false</legacy_random_points_on_sphere_in_divide>
+	</options>
+
+	<microenvironment_setup>
+		<variable name= 'fibronectin' units = 'uM' ID = '0'>
+			<physical_parameter_set>
+				<diffusion_coefficient units="uM^2/min">0</diffusion_coefficient>
+				<decay_rate units="1/min">0.0</decay_rate>
+			</physical_parameter_set>
+			<initial_condition units="uM">0</initial_condition>
+			<!-- <Dirichlet_boundary_condition units="uM" enabled="true">0</Dirichlet_boundary_condition> -->
+		</variable>
+
+		<!-- <variable name= 'VEGF' units = 'uM' ID = '1'>
+			<physical_parameter_set>
+				<diffusion_coefficient units="uM^2/min">10.0</diffusion_coefficient>
+				<decay_rate units="1/min">0.0</decay_rate>
+			</physical_parameter_set>
+			<initial_condition units="uM">30</initial_condition> -->
+			<!-- <Dirichlet_boundary_condition units="uM" enabled="true">30.0</Dirichlet_boundary_condition> -->
+		<!-- </variable> -->
+<!--
+		<variable name= 'DAN' units = 'uM' ID = '2'>
+			<physical_parameter_set>
+				<diffusion_coefficient units="uM^2/min">1.0</diffusion_coefficient>
+				<decay_rate units="1/min">0.0</decay_rate>
+			</physical_parameter_set>
+			<initial_condition units="uM">30</initial_condition> -->
+			<!-- <Dirichlet_boundary_condition units="uM" enabled="true">30.0</Dirichlet_boundary_condition> -->
+		<!-- </variable> -->
+
+		<options>
+			<calculate_gradients>true</calculate_gradients>
+			<track_internalized_substrates_in_each_agent>false</track_internalized_substrates_in_each_agent>
+			<!-- not yet supported -->
+			<initial_condition type="matlab" enabled="false">
+				<filename>./config/initial.mat</filename>
+			</initial_condition>
+			<!-- not yet supported -->
+			<dirichlet_nodes type="matlab" enabled="false">
+				<filename>./config/dirichlet.mat</filename>
+			</dirichlet_nodes>
+		</options>
+	</microenvironment_setup>
+
+	<cell_definitions>
+
+	</cell_definitions>
+
+
+
+	<user_parameters>
+		<!-- <random_seed type="int" units="dimensionless">0</random_seed> -->
+		<scenario type = "int" units ="dimensionless">0</scenario>
+
+		<!-- do the leader cells all initially point and move to the right ( = false), or do they have a random orientation and move the same way as followers? -->
+		<leader_cell_initially_has_random_orientation type = "bool" units="dimensionless">true</leader_cell_initially_has_random_orientation>
+		<!-- do you use the add_in_new_cells function ( = true) or add_in_new_cells_if_free_space ( = false)? -->
+		<cell_enters_regardless_of_space type = "bool" units = "dimensionless">false</cell_enters_regardless_of_space>
+		<!-- do you only sense fibronectin puncta that lie within an angle [-pi/2, pi/2] of your current velocity? -->
+		<sense_fibronectin_along_movement_direction type = "bool" units = "dimensionless">false</sense_fibronectin_along_movement_direction>
+		<!-- < do you have the FN initial condition be located along a strip (= true), or is fibronectin located throughout the domain? -->
+		<fibronectin_strip_initial_condition type = "bool" units = "dimensionless">false</fibronectin_strip_initial_condition>
+		<!-- are leaders able to sense a global signal (e.g. chemotaxis) guiding them to the correct target site? -->
+		<leaders_have_global_signal type="bool" units="dimensionless">false</leaders_have_global_signal>
+		<!-- are followers able to sense a global signal (e.g. chemotaxis) guiding them to the correct target site? -->
+		<followers_have_global_signal type="bool" units="dimensionless">false</followers_have_global_signal>
+
+		<!-- for the initial fibronectin concentration, how far apart are the individual puncta ? -->
+		<!-- <fibronectin_puncta_wavelength type = "double" units = "microns">20.0</fibronectin_puncta_wavelength> -->
+		<fibronectin_puncta_wavelength type = "double" units = "microns">20.0</fibronectin_puncta_wavelength>
+		<!-- how large is the sensing radius of a follower cell filopodia? -->
+		<!-- BE CAREFUL WITH THIS VALUE! THIS IS ALSO THE MECHANICS VOXEL SIZE, SO CERTAIN VALUES CAN CAUSE SEG FAULTS (VOXEL CENTRES LIE OUT OF GRID)! -->
+		<filopodia_sensing_radius type = "double" units = "microns">27.5</filopodia_sensing_radius>
+		<!-- what is the cell speed off fibronectin? -->
+		<cell_speed_off_fibronectin type = "double" units = "microns/min">0.05</cell_speed_off_fibronectin>
+		<!-- how long on average do cells travel before they change their direction? (only appears in PhysiCell built-in version)-->
+		<cell_persistence_time type = "double" units = "min">0</cell_persistence_time>
+		<!-- how much do you bias your FN direction towards the VM sampled vector for haptotaxis ( = 1), or towards the puncta angle for contact guidance (= 0)? -->
+		<bias_towards_VM_direction type = "double" units = "dimensionless">0.5</bias_towards_VM_direction>
+		<!-- how high is the kernel that is used to compute the fibronectin guidance surface? Note: total height of gaussian = parameter*[concentration of fibronectin] -->
+		<fibronectin_kernel_max_value type = "double" units = "dimensionless">10.0</fibronectin_kernel_max_value>
+		<!-- how high is the kernel that is used to compute the contact mediated guidance surface? -->
+		<contact_guidance_kernel_max_value type = "double" units ="microns">100.0</contact_guidance_kernel_max_value>
+		<!-- how long do you have to wait on average before a leader deposits a new FN puncta? -->
+		<!-- <average_time_until_next_filopodia_drop type = "double" units = "min">15</average_time_until_next_filopodia_drop> -->
+		<average_time_until_next_filopodia_drop type = "double" units = "min">30</average_time_until_next_filopodia_drop>
+
+
+		<!-- what is the half life of how long it takes for the puncta orientation to be changed by other cells? -->
+		<half_life_of_puncta_orientation_change type = "double" units = "min">30</half_life_of_puncta_orientation_change>
+		<!-- what is the y-distance of the strip along which new cells can enter the domain from the left hand boundary (centered at the midpoint of the LH boundary)? -->
+		<!-- <y_length_of_cell_entrance_strip type = "double" units = "microns">50</y_length_of_cell_entrance_strip> -->
+		<y_length_of_cell_entrance_strip type = "double" units = "microns">120</y_length_of_cell_entrance_strip>
+		<!-- what is the radius of the cell? -->
+		<default_cell_radius type="double" units="microns">7.5</default_cell_radius>
+		<!-- what is the speed of leaders and followers on fibronectin (and low DAN)? -->
+		<!-- <default_cell_speed type = "double" units = "microns/min">0.5</default_cell_speed> -->
+		<default_cell_speed type = "double" units = "microns/min">0.8</default_cell_speed>
+		<!-- at what concentration of fibronectin can leaders and follower cells sense puncta? -->
+		<fibronectin_speed_threshold type="double" units = "uM">10.0</fibronectin_speed_threshold>
+		<!-- at what rate do leader cells secrete fibronectin? -->
+		<leader_cell_fibronectin_secretion_rate type="double" units = "uM/min/um^3">0.0</leader_cell_fibronectin_secretion_rate>
+		<!-- at what rate do follower cells secrete fibronectin? -->
+		<follower_cell_fibronectin_secretion_rate type="double" units = "uM/min/um^3">0.0</follower_cell_fibronectin_secretion_rate>
+		<!-- at what rate do (follower) cells enter the domain at the left? (add_in_new_cells function only)-->
+		<rate_of_cell_entrance type="double" units="1/min">0.1</rate_of_cell_entrance>
+		<!-- what is a leader cell's strength of repulsion (used to compute velocity from cell-cell contact)? -->
+		<leaders_cell_cell_repulsion_strength type="double" units="micron/min">0.5</leaders_cell_cell_repulsion_strength>
+		<!-- what is a follower cell's strength of repulsion? (used to compute velocity from cell-cell contact) -->
+		<followers_cell_cell_repulsion_strength type="double" units="micron/min">0.5</followers_cell_cell_repulsion_strength>
+		<!-- if a leader/follower does sense a global signal, what is the weight of the global cue relative to the combined ECM/volume exclusion cue? -->
+		<weight_towards_chemotaxis_cues type="double" units="dimensionless">0</weight_towards_chemotaxis_cues>
+		<!-- what is the power of the singularity for the repulsive force? Note that you already have negative value taken into account!-->
+		<power_of_repulsive_singularity type="double" units="dimensionless">0.0</power_of_repulsive_singularity>
+		<!-- what is the scaling of the singularity for the repulsive force? F = (A/r)^m*(1-r/Rmin)^2 -->
+		<scaling_of_singularity type="double" units="dimensionless">1.0</scaling_of_singularity>
+
+	</user_parameters>
+
+</PhysiCell_settings>
